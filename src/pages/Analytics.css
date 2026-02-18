@@ -1,0 +1,172 @@
+.analytics-page {
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+.analytics-main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.analytics-header {
+  margin-bottom: 2rem;
+}
+
+.analytics-header h1 {
+  font-size: 2rem;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+}
+
+.analytics-header p {
+  color: #64748b;
+}
+
+.charts-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3%;
+}
+
+.chart-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 6px -1PX rgba(0, 0, 0, 0.1);
+}
+
+.chart-card h3 {
+  margin-bottom: 1.5rem;
+  font-size: 1.125rem;
+  color: #334155;
+}
+
+.chart-wrapper {
+  width: 100%;
+  height: 300px;
+}
+
+.posts-table-section {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.posts-table-section h3 {
+  margin-bottom: 1.5rem;
+  color: #334155;
+}
+
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.analytics-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1.5rem;
+}
+
+.analytics-table th, 
+.analytics-table td {
+  text-align: left;
+  padding: 1rem;
+    color: black;
+  font-weight: 600;
+}
+.analytics-table th{
+    background-color: #f1f5f9;
+    color: #475569;
+    font-weight: 600;
+} 
+
+.analytics-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.page-btn {
+  padding: 0.5rem 1rem;
+  border: 1px solid #e2e8f0;
+  background: white;
+  color: #475569;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+.page-btn:active {
+  background: #e2e8f0;
+  color: white;
+  border-color: #6366f1;
+}
+
+.page-btn:disabled{
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.loading-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+    font-size: 1.2rem;
+    color: #64748b;
+}
+
+@media (max-width: 768px) {
+     .charts-container {
+    grid-template-columns: 1fr;
+  }
+
+  .analytics-main {
+    padding: 1rem;
+  }
+}
+
+.analytics-table th:last-child,
+.analytics-table td:last-child{
+    text-align: center;
+}
+.analytics-table .edit-btn,
+.analytics-table .delete-btn{
+    padding: 0.5rem 0.75rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.2s;
+    background: transparent;
+}
+
+.analytics-table .edit-btn{
+    color: #3b82f6;
+}
+.analytics-table .edit-btn:hover{
+    background: #dbeafe;
+    transform: scale(1.1);
+}
+.analytics-table .delete-btn{
+    color: red;
+
+}
+.analytics-table .delete-btn:hover{
+    background: #fee2e2;
+    transform: scale(1.1);
+}

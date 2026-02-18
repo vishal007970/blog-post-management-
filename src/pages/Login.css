@@ -1,0 +1,140 @@
+/* Reset & base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #300051, #00225d);
+}
+
+/* Centering wrapper */
+.form-container {
+  background: #ffffff;
+  width: 420px;
+  padding: 35px 40px;
+  border-radius: 12px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+
+  /* PERFECT CENTER */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* Heading */
+.form-title {
+  text-align: center;
+  color: #1e3c72;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.form-container h5 {
+  text-align: center;
+  font-weight: 400;
+  color: #666;
+  margin-bottom: 28px;
+}
+
+/* Form groups */
+.form-group {
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+/* Labels */
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #333;
+  font-weight: 500;
+  text-align: left;
+}
+
+/* Inputs */
+.form-group input {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus {
+  border-color: #2a5298;
+  box-shadow: 0 0 0 2px rgba(42, 82, 152, 0.15);
+}
+
+/* Error state for inputs */
+.form-group input.input-error {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.15);
+}
+
+.form-group input.input-error:focus {
+  border-color: #dc3545;
+  box-shadow: 0 0 0 2px rgba(220, 53, 69, 0.15);
+}
+
+/* Error message */
+.error-msg {
+  display: block;
+  color: #dc3545;
+  font-size: 12px;
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* Button - SAME WIDTH AS INPUT */
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  margin-top: 14px;
+  background: #2a5298;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 500;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: #1e3c72;
+}
+
+/* Login text */
+.link-text {
+  margin-top: 22px;
+  text-align: center;
+  font-size: 14px;
+  color: #555;
+}
+
+.link-text a {
+  color: #2a5298;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.link-text a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .form-container {
+    width: 90%;
+    padding: 30px 25px;
+  }
+}
