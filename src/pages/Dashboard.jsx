@@ -1,23 +1,19 @@
-
-// src/pages/Dashboard.jsx
 import { useEffect, useState } from "react";
-import { FaPlus } from "react-icons/fa";
+import { FaPlus, FaStar } from "react-icons/fa";
 import { MdDelete, MdEdit } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import Navbar from "../component/Navbar";
 import "./Dashboard.css";
- // Same path as CreatePost
-
-// ... rest of your Dashboard.jsx code remains the same
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [favorites, setFavorites] = useState([]); 
 
   const handleCreatePostClick = () => {
-    navigate("/create-post");  // Fixed to match route
+    navigate("/create-post");
   };
 
   const handleEditPost = (post) => {
@@ -25,19 +21,18 @@ const Dashboard = () => {
   };
 
   const handleReadMore = (post) => {
-    navigate(`/post/${post.id}`);  // Fixed to match route
+    navigate(`/post/${post.id}`);
   };
 
   const fetchPosts = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:5000/posts");  // Changed port to 5000 to match CreatePost
+      const response = await fetch("http://localhost:3000/posts");
       const data = await response.json();
-      setPosts(Array.isArray(data) ? data : []);
+      setPosts(data);
     } catch (error) {
       console.error("Error fetching posts:", error);
       toast.error("Failed to fetch posts");
-      setPosts([]);
     } finally {
       setLoading(false);
     }
@@ -45,6 +40,9 @@ const Dashboard = () => {
 
   useEffect(() => {
     fetchPosts();
+    // Load favorites from localStorage on component mount
+    const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+    setFavorites(savedFavorites);
   }, []);
 
   const handleLogout = () => {
@@ -56,7 +54,7 @@ const Dashboard = () => {
   const handleDeletePost = async (id) => {
     if (window.confirm("Are you sure you want to delete this post?")) {
       try {
-        await fetch(`http://localhost:5000/posts/${id}`, {  // Changed port to 5000
+        await fetch(`http://localhost:3000/posts/${id}`, {
           method: "DELETE",
         });
         setPosts(posts.filter((post) => post.id !== id));
@@ -68,40 +66,67 @@ const Dashboard = () => {
     }
   };
 
-  const loginData = JSON.parse(localStorage.getItem("loginData") || "{}");
-  
-  let authData = [];
-  try {
-    const storedAuth = localStorage.getItem("authData");
-    if (storedAuth) {
-      const parsed = JSON.parse(storedAuth);
-      authData = Array.isArray(parsed) ? parsed : [];
+  // Updated toggle favorite function with localStorage
+  const handleToggleFavorite = (e, postId) => {
+    e.stopPropagation(); // Prevent event bubbling
+    
+    let newFavorites;
+    if (favorites.includes(postId)) {
+      newFavorites = favorites.filter(id => id !== postId);
+      toast.info("Removed from favorites");
+    } else {
+      newFavorites = [...favorites, postId];
+      toast.success("Added to favorites");
     }
-  } catch (error) {
-    console.error("Error parsing authData:", error);
-    authData = [];
-  }
+    
+    setFavorites(newFavorites);
+    localStorage.setItem('favorites', JSON.stringify(newFavorites));
+  };
+
+  // Add image error handler
+  const handleImageError = (e) => {
+    e.target.src = 'https://via.placeholder.com/300x200?text=No+Image';
+  };
+
+  // Fixed: Safely parse localStorage data
+  const loginData = (() => {
+    try {
+      return JSON.parse(localStorage.getItem("loginData") || "{}");
+    } catch {
+      return {};
+    }
+  })();
+
+  const authData = (() => {
+    try {
+      const data = localStorage.getItem("authData");
+      return data ? JSON.parse(data) : [];
+    } catch {
+      return [];
+    }
+  })();
 
   let currentUser = "";
 
   if (loginData?.email) {
-    const foundUser = Array.isArray(authData) 
-      ? authData.find((user) => user && user.email === loginData.email)
-      : null;
-    currentUser = foundUser?.username || loginData.email.split("@")[0];
+    // Fixed: Check if authData is an array before using find
+    if (Array.isArray(authData)) {
+      const foundUser = authData.find((user) => user.email === loginData.email);
+      currentUser = foundUser?.username || loginData.email.split("@")[0];
+    } else {
+      // If authData is not an array, use email username as fallback
+      currentUser = loginData.email.split("@")[0];
+    }
   }
 
-  const totalPosts = Array.isArray(posts) ? posts.length : 0;
-  
-  const userPosts = Array.isArray(posts) && currentUser
-    ? posts.filter((post) => {
-        if (!post || !post.author) return false;
-        const postAuthor = post.author.toLowerCase().trim();
-        const currentUserLower = currentUser.toLowerCase().trim();
-        return postAuthor === currentUserLower;
-      }).length
-    : 0;
-    
+  // Fixed: Safely filter posts
+  const totalPosts = posts.length;
+  const userPosts = posts.filter((post) => {
+    if (!currentUser) return false;
+    const postAuthor = (post.author || "").toLowerCase().trim();
+    const currentUserLower = currentUser.toLowerCase().trim();
+    return postAuthor === currentUserLower;
+  }).length;
   const communityPosts = totalPosts - userPosts;
 
   return (
@@ -148,30 +173,34 @@ const Dashboard = () => {
           <div className="posts-grid">
             {loading ? (
               <div className="loading-spinner">Loading posts...</div>
-            ) : Array.isArray(posts) && posts.length > 0 ? (
+            ) : posts.length > 0 ? (
               posts.map((post) => (
-                <div className="post-card" key={post?.id || Math.random()}>
+                <div className="post-card" key={post.id}>
                   <div className="post-image-container">
                     <img
-                      src={post?.image || "https://via.placeholder.com/300"}
-                      alt={post?.title || "Post image"}
+                      src={post.image || 'https://via.placeholder.com/300x200?text=No+Image'}
+                      alt={post.title}
                       className="post-card-image"
-                      onError={(e) => {
-                        e.target.src = "https://via.placeholder.com/300";
-                      }}
+                      onError={handleImageError}
                     />
+                    <button 
+                      className={`favorite-btn ${favorites.includes(post.id) ? 'active' : ''}`}
+                      onClick={(e) => handleToggleFavorite(e, post.id)}
+                    >
+                      <FaStar size={20} color={favorites.includes(post.id) ? "#FFD700" : "#ffffff"} />
+                    </button>
                     <div className="post-actions">
                       <button
                         className="action-btn edit-btn"
                         title="Edit Post"
-                        onClick={() => post?.id && handleEditPost(post)}
+                        onClick={() => handleEditPost(post)}
                       >
                         <MdEdit size={22} color="#ffffff" />
                       </button>
                       <button
                         className="action-btn delete-btn"
                         title="Delete Post"
-                        onClick={() => post?.id && handleDeletePost(post.id)}
+                        onClick={() => handleDeletePost(post.id)}
                       >
                         <MdDelete size={20} color="#ffffff" />
                       </button>
@@ -180,20 +209,20 @@ const Dashboard = () => {
                   <div className="post-card-content">
                     <div className="post-meta">
                       <span className="post-author">
-                        By {post?.author || "Anonymous"}
+                        By {post.author || "Anonymous"}
                       </span>
                       <span className="post-date">
-                        {post?.date ||
-                          (post?.createdAt 
-                            ? new Date(post.createdAt).toLocaleDateString()
-                            : new Date().toLocaleDateString())}
+                        {post.date ||
+                          new Date(
+                            post.createdAt || Date.now(),
+                          ).toLocaleDateString()}
                       </span>
                     </div>
-                    <h3 className="post-card-title">{post?.title || "Untitled"}</h3>
-                    <p className="post-card-description">{post?.description || "No description available"}</p>
+                    <h3 className="post-card-title">{post.title}</h3>
+                    <p className="post-card-description">{post.description}</p>
                     <button
                       className="read-more-btn"
-                      onClick={() => post?.id && handleReadMore(post)}
+                      onClick={() => handleReadMore(post)}
                     >
                       Read More
                     </button>

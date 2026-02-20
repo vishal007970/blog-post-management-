@@ -14,6 +14,7 @@ import CreatePost from "./pages/CreatePost.jsx";
 import PostDetails from "./pages/PostDetails.jsx";
 import Analytics from "./pages/Analytics.jsx";
 import { ThemeProvider } from "./context/ThemeContext";
+import Favourite from "./pages/Favourite";
 
 // Default redirect
 const DefaultRoute = () => {
@@ -65,6 +66,16 @@ function App() {
       element: (
         <AuthGuard required={true}>
           <CreatePost />
+        </AuthGuard>
+      ),
+    },
+
+
+    {
+      path: "/Favourite",  // Changed from "/createpost" to match navigation
+      element: (
+        <AuthGuard required={true}>
+          <Favourite />
         </AuthGuard>
       ),
     },

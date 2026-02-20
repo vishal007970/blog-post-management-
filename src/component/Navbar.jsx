@@ -5,6 +5,7 @@ import {
   FaSignOutAlt,
   FaMoon,
   FaSun,
+  FaHeart,
 } from "react-icons/fa";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./Navbar.css";
@@ -34,13 +35,18 @@ const Navbar = () => {
             <FaHome /> Home
           </NavLink>
 
-          <NavLink to="/create-post" className="nav-item">
+          <NavLink to="/createpost" className="nav-item">
             <FaPlusSquare /> Create Post
           </NavLink>
 
           <NavLink to="/analytics" className="nav-item">
             <FaPlusSquare /> Analytics
           </NavLink>
+
+   <NavLink to="/favourite" className="nav-item">
+            <FaHeart /> Favourite
+          </NavLink>
+
         </div>
 
         <div className="navbar-actions">
